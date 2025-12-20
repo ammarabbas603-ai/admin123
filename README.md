@@ -2,18 +2,23 @@
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
-<title>قياسات زيوت السيارات</title>
+<title>دليل زيوت السيارات</title>
 <style>
 body{font-family:tahoma;direction:rtl;background:#f4f4f4;padding:20px}
 h1{color:#003366}
-select,input,button{padding:8px;margin:5px}
+input,select,button{padding:8px;margin:5px}
 table{width:100%;background:#fff;border-collapse:collapse;margin-top:20px}
 th,td{border:1px solid #aaa;padding:8px;text-align:center}
 </style>
 </head>
 <body>
 
-<h1>نظام قياسات زيوت السيارات</h1>
+<h1>دليل زيوت السيارات</h1>
+
+<!-- بحث سريع -->
+<input id="search" placeholder="ابحث عن سيارة..." onkeyup="searchCars()">
+
+<br><br>
 
 <!-- اختيار السيارة -->
 <select id="car" onchange="setOil()">
@@ -22,6 +27,7 @@ th,td{border:1px solid #aaa;padding:8px;text-align:center}
 <option value="تويوتا كامري">تويوتا كامري</option>
 <option value="نيسان التيما">نيسان التيما</option>
 <option value="هيونداي إلنترا">هيونداي إلنترا</option>
+<option value="كيا سيراتو">كيا سيراتو</option>
 </select>
 
 <!-- سنة الصنع -->
@@ -32,7 +38,6 @@ th,td{border:1px solid #aaa;padding:8px;text-align:center}
 <!-- نوع الزيت -->
 <input id="oil" readonly placeholder="نوع الزيت">
 
-<input id="oxi" type="number" placeholder="الأكسدة (%)">
 <button onclick="add()">إضافة</button>
 
 <table>
@@ -40,36 +45,32 @@ th,td{border:1px solid #aaa;padding:8px;text-align:center}
 <th>السيارة</th>
 <th>سنة الصنع</th>
 <th>نوع الزيت</th>
-<th>الأكسدة</th>
-<th>الحالة</th>
 </tr>
 <tbody id="rows"></tbody>
 </table>
 
 <script>
-// توليد سنوات الصنع تلقائيًا
+// توليد السنوات
 for(let y=2005;y<=2025;y++){
  year.add(new Option(y,y));
 }
 
-// قاعدة بيانات السيارة + السنة + الزيت
+// قاعدة البيانات
 const oils = {
  "تويوتا كورولا":{
-  "2018":"5W-30",
-  "2019":"5W-30",
-  "2020":"5W-30"
+  "2018":"5W-30","2019":"5W-30","2020":"5W-30"
  },
  "تويوتا كامري":{
-  "2019":"5W-30",
-  "2020":"5W-30"
+  "2019":"5W-30","2020":"5W-30"
  },
  "نيسان التيما":{
-  "2018":"5W-30",
-  "2019":"5W-30"
+  "2018":"5W-30","2019":"5W-30"
  },
  "هيونداي إلنترا":{
-  "2020":"5W-30",
-  "2021":"5W-30"
+  "2020":"5W-30","2021":"5W-30"
+ },
+ "كيا سيراتو":{
+  "2019":"5W-30","2020":"5W-30"
  }
 };
 
@@ -77,25 +78,32 @@ function setOil(){
  oil.value = oils[car.value]?.[year.value] || "";
 }
 
-function status(o){
- if(o<20) return "جيد";
- if(o<35) return "متوسط";
- return "تغيير الزيت";
-}
-
 let data=[];
+
 function add(){
- if(!car.value||!year.value||!oxi.value) return;
- data.push([car.value,year.value,oil.value,oxi.value,status(oxi.value)]);
- oxi.value="";
+ if(!car.value||!year.value) return;
+ data.push([car.value,year.value,oil.value||"—"]);
  render();
 }
 
 function render(){
  rows.innerHTML="";
  data.forEach(r=>{
-  rows.innerHTML+=`<tr>${r.map(c=>`<td>${c}</td>`).join("")}</tr>`;
+  rows.innerHTML+=`<tr>
+   <td>${r[0]}</td>
+   <td>${r[1]}</td>
+   <td>${r[2]}</td>
+  </tr>`;
  });
+}
+
+// البحث السريع
+function searchCars(){
+ let q = search.value.toLowerCase();
+ for(let i=0;i<car.options.length;i++){
+  let opt = car.options[i];
+  opt.style.display = opt.text.toLowerCase().includes(q) ? "" : "none";
+ }
 }
 </script>
 
