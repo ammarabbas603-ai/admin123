@@ -6,7 +6,7 @@
 <style>
 body{font-family:tahoma;direction:rtl;background:#f2f2f2;padding:20px}
 h1{color:#003366}
-input,select,button{padding:8px;margin:5px}
+select,input,button{padding:8px;margin:5px}
 table{width:100%;background:#fff;border-collapse:collapse;margin-top:20px}
 th,td{border:1px solid #aaa;padding:10px;text-align:center}
 .good{color:green}
@@ -18,23 +18,19 @@ th,td{border:1px solid #aaa;padding:10px;text-align:center}
 
 <h1>موقع قياسات زيوت السيارات</h1>
 
-<!-- إدخال البيانات -->
-<input id="car" placeholder="اسم السيارة">
-
-<select id="oil">
-  <option value="">اختر نوع الزيت</option>
-  <option>5W-30</option>
-  <option>5W-40</option>
-  <option>10W-30</option>
-  <option>10W-40</option>
-  <option>15W-40</option>
+<!-- اختيار السيارة -->
+<select id="car" onchange="setOil()">
+<option value="">اختر السيارة</option>
 </select>
 
+<!-- نوع الزيت -->
+<input id="oil" readonly placeholder="نوع الزيت">
+
+<!-- الأكسدة -->
 <input id="oxi" type="number" placeholder="الأكسدة (%)">
 
 <button onclick="add()">إضافة</button>
 
-<!-- الجدول -->
 <table>
 <tr>
 <th>السيارة</th>
@@ -46,7 +42,34 @@ th,td{border:1px solid #aaa;padding:10px;text-align:center}
 </table>
 
 <script>
-let data = [];
+// قاعدة بيانات السيارات والزيوت
+const cars = {
+ "تويوتا كورولا":"5W-30",
+ "تويوتا كامري":"5W-30",
+ "نيسان التيما":"5W-30",
+ "نيسان باترول":"10W-40",
+ "هوندا أكورد":"5W-20",
+ "هيونداي إلنترا":"5W-30",
+ "هيونداي سوناتا":"5W-30",
+ "كيا سيراتو":"5W-30",
+ "كيا سبورتاج":"5W-30",
+ "شفروليه كابتيفا":"10W-40",
+ "فورد إكسبلورر":"5W-30",
+ "مرسيدس C200":"5W-40",
+ "بي إم دبليو 320":"5W-30"
+};
+
+// تحميل السيارات تلقائيًا
+Object.keys(cars).forEach(c=>{
+ let opt = document.createElement("option");
+ opt.value = c;
+ opt.textContent = c;
+ car.appendChild(opt);
+});
+
+function setOil(){
+ oil.value = cars[car.value] || "";
+}
 
 function status(o){
  if(o < 20) return "<span class='good'>جيد</span>";
@@ -54,37 +77,33 @@ function status(o){
  return "<span class='bad'>تغيير الزيت</span>";
 }
 
+let data=[];
+
 function add(){
- if(car.value=="" || oil.value=="" || oxi.value=="") return;
+ if(!car.value || !oxi.value) return;
 
  data.push({
-  car: car.value,
-  oil: oil.value,
-  oxi: Number(oxi.value)
+  car:car.value,
+  oil:oil.value,
+  oxi:Number(oxi.value)
  });
-
- car.value="";
- oil.value="";
  oxi.value="";
-
  render();
 }
 
 function render(){
  rows.innerHTML="";
  data.forEach(d=>{
-  rows.innerHTML += `
-   <tr>
-    <td>${d.car}</td>
-    <td>${d.oil}</td>
-    <td>${d.oxi}%</td>
-    <td>${status(d.oxi)}</td>
-   </tr>
-  `;
+  rows.innerHTML+=`
+  <tr>
+   <td>${d.car}</td>
+   <td>${d.oil}</td>
+   <td>${d.oxi}%</td>
+   <td>${status(d.oxi)}</td>
+  </tr>`;
  });
 }
 </script>
 
 </body>
 </html>
-
