@@ -6,7 +6,7 @@
 <style>
 body{font-family:tahoma;direction:rtl;background:#f2f2f2;padding:20px}
 h1{color:#003366}
-input,button{padding:8px;margin:5px}
+input,select,button{padding:8px;margin:5px}
 table{width:100%;background:#fff;border-collapse:collapse;margin-top:20px}
 th,td{border:1px solid #aaa;padding:10px;text-align:center}
 .good{color:green}
@@ -18,15 +18,27 @@ th,td{border:1px solid #aaa;padding:10px;text-align:center}
 
 <h1>موقع قياسات زيوت السيارات</h1>
 
+<!-- إدخال البيانات -->
 <input id="car" placeholder="اسم السيارة">
-<input id="visc" placeholder="اللزوجة">
-<input id="oxi" placeholder="الأكسدة (%)">
+
+<select id="oil">
+  <option value="">اختر نوع الزيت</option>
+  <option>5W-30</option>
+  <option>5W-40</option>
+  <option>10W-30</option>
+  <option>10W-40</option>
+  <option>15W-40</option>
+</select>
+
+<input id="oxi" type="number" placeholder="الأكسدة (%)">
+
 <button onclick="add()">إضافة</button>
 
+<!-- الجدول -->
 <table>
 <tr>
 <th>السيارة</th>
-<th>اللزوجة</th>
+<th>نوع الزيت</th>
 <th>الأكسدة</th>
 <th>الحالة</th>
 </tr>
@@ -43,20 +55,32 @@ function status(o){
 }
 
 function add(){
- let o = Number(oxi.value);
- data.push({c:car.value,v:visc.value,o:o});
+ if(car.value=="" || oil.value=="" || oxi.value=="") return;
+
+ data.push({
+  car: car.value,
+  oil: oil.value,
+  oxi: Number(oxi.value)
+ });
+
+ car.value="";
+ oil.value="";
+ oxi.value="";
+
  render();
 }
 
 function render(){
- rows.innerHTML = "";
+ rows.innerHTML="";
  data.forEach(d=>{
-  rows.innerHTML += `<tr>
-  <td>${d.c}</td>
-  <td>${d.v}</td>
-  <td>${d.o}%</td>
-  <td>${status(d.o)}</td>
-  </tr>`;
+  rows.innerHTML += `
+   <tr>
+    <td>${d.car}</td>
+    <td>${d.oil}</td>
+    <td>${d.oxi}%</td>
+    <td>${status(d.oxi)}</td>
+   </tr>
+  `;
  });
 }
 </script>
