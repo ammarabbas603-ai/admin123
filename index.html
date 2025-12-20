@@ -16,25 +16,27 @@ th,td{border:1px solid #aaa;padding:10px;text-align:center}
 </head>
 <body>
 
-<h1>موقع قياسات زيوت السيارات</h1>
+<h1>قياسات زيوت السيارات</h1>
 
-<!-- اختيار السيارة -->
-<select id="car" onchange="setOil()">
-<option value="">اختر السيارة</option>
+<select id="brand" onchange="loadModels()">
+<option value="">اختر الشركة</option>
 </select>
 
-<!-- نوع الزيت -->
-<input id="oil" readonly placeholder="نوع الزيت">
+<select id="model" onchange="setOil()">
+<option value="">اختر الموديل</option>
+</select>
 
-<!-- الأكسدة -->
+<input id="oil" readonly placeholder="نوع الزيت">
 <input id="oxi" type="number" placeholder="الأكسدة (%)">
 
 <button onclick="add()">إضافة</button>
+<button onclick="exportCSV()">تصدير Excel</button>
 
 <table>
 <tr>
-<th>السيارة</th>
-<th>نوع الزيت</th>
+<th>الشركة</th>
+<th>الموديل</th>
+<th>الزيت</th>
 <th>الأكسدة</th>
 <th>الحالة</th>
 </tr>
@@ -42,66 +44,84 @@ th,td{border:1px solid #aaa;padding:10px;text-align:center}
 </table>
 
 <script>
-// قاعدة بيانات السيارات والزيوت
-const cars = {
- "تويوتا كورولا":"5W-30",
- "تويوتا كامري":"5W-30",
- "نيسان التيما":"5W-30",
- "نيسان باترول":"10W-40",
- "هوندا أكورد":"5W-20",
- "هيونداي إلنترا":"5W-30",
- "هيونداي سوناتا":"5W-30",
- "كيا سيراتو":"5W-30",
- "كيا سبورتاج":"5W-30",
- "شفروليه كابتيفا":"10W-40",
- "فورد إكسبلورر":"5W-30",
- "مرسيدس C200":"5W-40",
- "بي إم دبليو 320":"5W-30"
+const db = {
+ "تويوتا":{
+  "كورولا":"5W-30",
+  "كامري":"5W-30",
+  "لاندكروزر":"10W-40"
+ },
+ "نيسان":{
+  "التيما":"5W-30",
+  "باترول":"10W-40",
+  "صني":"5W-30"
+ },
+ "هيونداي":{
+  "إلنترا":"5W-30",
+  "سوناتا":"5W-30"
+ },
+ "كيا":{
+  "سيراتو":"5W-30",
+  "سبورتاج":"5W-30"
+ },
+ "مرسيدس":{
+  "C200":"5W-40",
+  "E300":"5W-40"
+ },
+ "BMW":{
+  "320":"5W-30",
+  "520":"5W-30"
+ }
 };
 
-// تحميل السيارات تلقائيًا
-Object.keys(cars).forEach(c=>{
- let opt = document.createElement("option");
- opt.value = c;
- opt.textContent = c;
- car.appendChild(opt);
+Object.keys(db).forEach(b=>{
+ let o=document.createElement("option");
+ o.textContent=b; o.value=b;
+ brand.appendChild(o);
 });
 
+function loadModels(){
+ model.innerHTML="<option>اختر الموديل</option>";
+ oil.value="";
+ if(!brand.value) return;
+ Object.keys(db[brand.value]).forEach(m=>{
+  let o=document.createElement("option");
+  o.textContent=m; o.value=m;
+  model.appendChild(o);
+ });
+}
+
 function setOil(){
- oil.value = cars[car.value] || "";
+ oil.value=db[brand.value][model.value]||"";
 }
 
 function status(o){
- if(o < 20) return "<span class='good'>جيد</span>";
- if(o < 35) return "<span class='mid'>متوسط</span>";
- return "<span class='bad'>تغيير الزيت</span>";
+ if(o<20) return "جيد";
+ if(o<35) return "متوسط";
+ return "تغيير الزيت";
 }
 
 let data=[];
-
 function add(){
- if(!car.value || !oxi.value) return;
-
- data.push({
-  car:car.value,
-  oil:oil.value,
-  oxi:Number(oxi.value)
- });
+ if(!brand.value||!model.value||!oxi.value) return;
+ data.push([brand.value,model.value,oil.value,oxi.value,status(oxi.value)]);
  oxi.value="";
  render();
 }
 
 function render(){
  rows.innerHTML="";
- data.forEach(d=>{
-  rows.innerHTML+=`
-  <tr>
-   <td>${d.car}</td>
-   <td>${d.oil}</td>
-   <td>${d.oxi}%</td>
-   <td>${status(d.oxi)}</td>
-  </tr>`;
+ data.forEach(r=>{
+  rows.innerHTML+=`<tr>${r.map(c=>`<td>${c}</td>`).join("")}</tr>`;
  });
+}
+
+function exportCSV(){
+ let csv="الشركة,الموديل,الزيت,الأكسدة,الحالة\n";
+ data.forEach(r=>csv+=r.join(",")+"\n");
+ let a=document.createElement("a");
+ a.href=URL.createObjectURL(new Blob([csv]));
+ a.download="oil-report.csv";
+ a.click();
 }
 </script>
 
