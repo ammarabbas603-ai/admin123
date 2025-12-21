@@ -1,1 +1,99 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>اختيار زيت السيارة</title>
+<style>
+body{font-family:tahoma;direction:rtl;background:#f2f2f2;padding:20px}
+select,input{padding:8px;margin:5px;width:220px}
+h2{color:#003366}
+</style>
+</head>
+<body>
+
+<h2>اختيار زيت السيارة</h2>
+
+<select id="brand" onchange="loadModels()">
+<option value="">الشركة</option>
+</select>
+
+<select id="model" onchange="loadYears()">
+<option value="">الموديل</option>
+</select>
+
+<select id="year" onchange="showOil()">
+<option value="">سنة الصنع</option>
+</select>
+
+<br><br>
+<input id="oil" readonly placeholder="نوع الزيت سيظهر هنا">
+
+<script>
+const db = {
+ "تويوتا":{
+  "كورولا":years("5W-30"),
+  "كامري":years("5W-30"),
+  "راف4":years("5W-30"),
+  "لاندكروزر":years("10W-40")
+ },
+ "نيسان":{
+  "التيما":years("5W-30"),
+  "باترول":years("10W-40"),
+  "صني":years("5W-30")
+ },
+ "هيونداي":{
+  "إلنترا":years("5W-30"),
+  "سوناتا":years("5W-30"),
+  "توسان":years("5W-30")
+ },
+ "كيا":{
+  "سيراتو":years("5W-30"),
+  "سبورتاج":years("5W-30"),
+  "أوبتيما":years("5W-30")
+ },
+ "فورد":{
+  "إكسبلورر":years("5W-30"),
+  "فوكس":years("5W-30")
+ },
+ "مرسيدس":{
+  "C200":years("5W-40"),
+  "E300":years("5W-40")
+ },
+ "BMW":{
+  "320":years("5W-30"),
+  "520":years("5W-30")
+ }
+};
+
+function years(oil){
+ let y={};
+ for(let i=2005;i<=2025;i++) y[i]=oil;
+ return y;
+}
+
+Object.keys(db).forEach(b=>{
+ brand.add(new Option(b,b));
+});
+
+function loadModels(){
+ model.length=1; year.length=1; oil.value="";
+ Object.keys(db[brand.value]).forEach(m=>{
+  model.add(new Option(m,m));
+ });
+}
+
+function loadYears(){
+ year.length=1; oil.value="";
+ Object.keys(db[brand.value][model.value]).forEach(y=>{
+  year.add(new Option(y,y));
+ });
+}
+
+function showOil(){
+ oil.value = db[brand.value][model.value][year.value];
+}
+</script>
+
+</body>
+</html>
 
