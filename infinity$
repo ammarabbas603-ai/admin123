@@ -1,1 +1,104 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>متجر الطلبات</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{
+  font-family:tahoma;
+  direction:rtl;
+  background:#f5f5f5;
+  margin:0;
+  padding:20px;
+}
+h1{
+  text-align:center;
+  color:#2c3e50;
+}
+.product{
+  background:#fff;
+  padding:15px;
+  margin:15px auto;
+  max-width:400px;
+  border-radius:8px;
+  box-shadow:0 0 5px rgba(0,0,0,0.1);
+}
+.product h3{
+  margin:0 0 10px;
+}
+.price{
+  color:#27ae60;
+  font-size:18px;
+  margin-bottom:10px;
+}
+button{
+  background:#25D366;
+  color:#fff;
+  border:none;
+  padding:12px;
+  width:100%;
+  font-size:16px;
+  border-radius:6px;
+  cursor:pointer;
+}
+button:hover{
+  opacity:0.9;
+}
+.footer{
+  text-align:center;
+  margin-top:30px;
+  color:#555;
+  font-size:14px;
+}
+</style>
+</head>
+<body>
+
+<h1>متجر الطلبات</h1>
+
+<div class="product">
+  <h3>منتج رقم 1</h3>
+  <div class="price">السعر: 25,000 دينار</div>
+  <button onclick="order('منتج رقم 1')">اطلب الآن</button>
+</div>
+
+<div class="product">
+  <h3>منتج رقم 2</h3>
+  <div class="price">السعر: 40,000 دينار</div>
+  <button onclick="order('منتج رقم 2')">اطلب الآن</button>
+</div>
+
+<div class="product">
+  <h3>منتج رقم 3</h3>
+  <div class="price">السعر: 15,000 دينار</div>
+  <button onclick="order('منتج رقم 3')">اطلب الآن</button>
+</div>
+
+<div class="footer">
+الدفع نقدًا عند الاستلام<br>
+للتواصل والطلب عبر واتساب
+</div>
+
+<script>
+function order(product){
+  let text =
+`السلام عليكم
+أرغب بطلب المنتج التالي:
+
+اسم المنتج: ${product}
+الكمية:
+العنوان:
+ملاحظات:
+
+الدفع عند الاستلام`;
+  
+  let phone = "9647828301518";
+  let url = "https://wa.me/" + phone + "?text=" + encodeURIComponent(text);
+  window.open(url, "_blank");
+}
+</script>
+
+</body>
+</html>
 
