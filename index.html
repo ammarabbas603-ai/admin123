@@ -2,126 +2,100 @@
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
-<title>قياسات زيوت السيارات</title>
+<title>متجر الطلبات</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-body{font-family:tahoma;direction:rtl;background:#f2f2f2;padding:20px}
-h1{color:#003366}
-select,input,button{padding:8px;margin:5px}
-table{width:100%;background:#fff;border-collapse:collapse;margin-top:20px}
-th,td{border:1px solid #aaa;padding:10px;text-align:center}
-.good{color:green}
-.mid{color:orange}
-.bad{color:red}
+body{
+  font-family:tahoma;
+  direction:rtl;
+  background:#f5f5f5;
+  margin:0;
+  padding:20px;
+}
+h1{
+  text-align:center;
+  color:#2c3e50;
+}
+.product{
+  background:#fff;
+  padding:15px;
+  margin:15px auto;
+  max-width:400px;
+  border-radius:8px;
+  box-shadow:0 0 5px rgba(0,0,0,0.1);
+}
+.product h3{
+  margin:0 0 10px;
+}
+.price{
+  color:#27ae60;
+  font-size:18px;
+  margin-bottom:10px;
+}
+button{
+  background:#25D366;
+  color:#fff;
+  border:none;
+  padding:12px;
+  width:100%;
+  font-size:16px;
+  border-radius:6px;
+  cursor:pointer;
+}
+button:hover{
+  opacity:0.9;
+}
+.footer{
+  text-align:center;
+  margin-top:30px;
+  color:#555;
+  font-size:14px;
+}
 </style>
 </head>
 <body>
 
-<h1>قياسات زيوت السيارات</h1>
+<h1>متجر الطلبات</h1>
 
-<select id="brand" onchange="loadModels()">
-<option value="">اختر الشركة</option>
-</select>
+<div class="product">
+  <h3>منتج رقم 1</h3>
+  <div class="price">السعر: 25,000 دينار</div>
+  <button onclick="order('منتج رقم 1')">اطلب الآن</button>
+</div>
 
-<select id="model" onchange="setOil()">
-<option value="">اختر الموديل</option>
-</select>
+<div class="product">
+  <h3>منتج رقم 2</h3>
+  <div class="price">السعر: 40,000 دينار</div>
+  <button onclick="order('منتج رقم 2')">اطلب الآن</button>
+</div>
 
-<input id="oil" readonly placeholder="نوع الزيت">
-<input id="oxi" type="number" placeholder="الأكسدة (%)">
+<div class="product">
+  <h3>منتج رقم 3</h3>
+  <div class="price">السعر: 15,000 دينار</div>
+  <button onclick="order('منتج رقم 3')">اطلب الآن</button>
+</div>
 
-<button onclick="add()">إضافة</button>
-<button onclick="exportCSV()">تصدير Excel</button>
-
-<table>
-<tr>
-<th>الشركة</th>
-<th>الموديل</th>
-<th>الزيت</th>
-<th>الأكسدة</th>
-<th>الحالة</th>
-</tr>
-<tbody id="rows"></tbody>
-</table>
+<div class="footer">
+الدفع نقدًا عند الاستلام<br>
+للتواصل والطلب عبر واتساب
+</div>
 
 <script>
-const db = {
- "تويوتا":{
-  "كورولا":"5W-30",
-  "كامري":"5W-30",
-  "لاندكروزر":"10W-40"
- },
- "نيسان":{
-  "التيما":"5W-30",
-  "باترول":"10W-40",
-  "صني":"5W-30"
- },
- "هيونداي":{
-  "إلنترا":"5W-30",
-  "سوناتا":"5W-30"
- },
- "كيا":{
-  "سيراتو":"5W-30",
-  "سبورتاج":"5W-30"
- },
- "مرسيدس":{
-  "C200":"5W-40",
-  "E300":"5W-40"
- },
- "BMW":{
-  "320":"5W-30",
-  "520":"5W-30"
- }
-};
+function order(product){
+  let text =
+`السلام عليكم
+أرغب بطلب المنتج التالي:
 
-Object.keys(db).forEach(b=>{
- let o=document.createElement("option");
- o.textContent=b; o.value=b;
- brand.appendChild(o);
-});
+اسم المنتج: ${product}
+الكمية:
+العنوان:
+ملاحظات:
 
-function loadModels(){
- model.innerHTML="<option>اختر الموديل</option>";
- oil.value="";
- if(!brand.value) return;
- Object.keys(db[brand.value]).forEach(m=>{
-  let o=document.createElement("option");
-  o.textContent=m; o.value=m;
-  model.appendChild(o);
- });
-}
-
-function setOil(){
- oil.value=db[brand.value][model.value]||"";
-}
-
-function status(o){
- if(o<20) return "جيد";
- if(o<35) return "متوسط";
- return "تغيير الزيت";
-}
-
-let data=[];
-function add(){
- if(!brand.value||!model.value||!oxi.value) return;
- data.push([brand.value,model.value,oil.value,oxi.value,status(oxi.value)]);
- oxi.value="";
- render();
-}
-
-function render(){
- rows.innerHTML="";
- data.forEach(r=>{
-  rows.innerHTML+=`<tr>${r.map(c=>`<td>${c}</td>`).join("")}</tr>`;
- });
-}
-
-function exportCSV(){
- let csv="الشركة,الموديل,الزيت,الأكسدة,الحالة\n";
- data.forEach(r=>csv+=r.join(",")+"\n");
- let a=document.createElement("a");
- a.href=URL.createObjectURL(new Blob([csv]));
- a.download="oil-report.csv";
- a.click();
+الدفع عند الاستلام`;
+  
+  let phone = "9647828301518";
+  let url = "https://wa.me/" + phone + "?text=" + encodeURIComponent(text);
+  window.open(url, "_blank");
 }
 </script>
 
