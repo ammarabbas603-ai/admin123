@@ -2,100 +2,90 @@
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
-<title>متجر الطلبات</title>
+<title>سما بغداد - تسجيل الزيارات</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
 body{
-  font-family:tahoma;
-  direction:rtl;
-  background:#f5f5f5;
-  margin:0;
-  padding:20px;
+ font-family:Tahoma;
+ direction:rtl;
+ background:#f2f4f7;
+ padding:15px;
 }
-h1{
-  text-align:center;
-  color:#2c3e50;
+.container{
+ max-width:420px;
+ margin:auto;
+ background:#fff;
+ padding:20px;
+ border-radius:10px;
+ box-shadow:0 5px 15px rgba(0,0,0,.15);
 }
-.product{
-  background:#fff;
-  padding:15px;
-  margin:15px auto;
-  max-width:400px;
-  border-radius:8px;
-  box-shadow:0 0 5px rgba(0,0,0,0.1);
-}
-.product h3{
-  margin:0 0 10px;
-}
-.price{
-  color:#27ae60;
-  font-size:18px;
-  margin-bottom:10px;
+h2{text-align:center;color:#0a7}
+input,textarea,button{
+ width:100%;
+ padding:12px;
+ margin:6px 0;
+ border-radius:6px;
+ font-size:15px;
 }
 button{
-  background:#25D366;
-  color:#fff;
-  border:none;
-  padding:12px;
-  width:100%;
-  font-size:16px;
-  border-radius:6px;
-  cursor:pointer;
+ background:#0a7;
+ color:#fff;
+ border:none;
 }
-button:hover{
-  opacity:0.9;
-}
-.footer{
-  text-align:center;
-  margin-top:30px;
-  color:#555;
-  font-size:14px;
+#status{margin-top:10px;color:#555}
+#pdf{
+ display:none;
+ font-size:14px;
 }
 </style>
 </head>
 <body>
 
-<h1>متجر الطلبات</h1>
+<div class="container">
+<h2>سما بغداد</h2>
 
-<div class="product">
-  <h3>منتج رقم 1</h3>
-  <div class="price">السعر: 25,000 دينار</div>
-  <button onclick="order('منتج رقم 1')">اطلب الآن</button>
+<input id="shop" placeholder="اسم المحل">
+<input id="phone" placeholder="رقم الهاتف">
+<textarea id="notes" placeholder="ملاحظات"></textarea>
+
+<button onclick="getLocation()">📍 أخذ الموقع</button>
+<button onclick="createPDF()">📄 حفظ PDF</button>
+
+<div id="status"></div>
 </div>
 
-<div class="product">
-  <h3>منتج رقم 2</h3>
-  <div class="price">السعر: 40,000 دينار</div>
-  <button onclick="order('منتج رقم 2')">اطلب الآن</button>
-</div>
-
-<div class="product">
-  <h3>منتج رقم 3</h3>
-  <div class="price">السعر: 15,000 دينار</div>
-  <button onclick="order('منتج رقم 3')">اطلب الآن</button>
-</div>
-
-<div class="footer">
-الدفع نقدًا عند الاستلام<br>
-للتواصل والطلب عبر واتساب
+<!-- محتوى PDF -->
+<div id="pdf">
+<h3>سما بغداد</h3>
+<p><b>اسم المحل:</b> <span id="pShop"></span></p>
+<p><b>رقم الهاتف:</b> <span id="pPhone"></span></p>
+<p><b>التاريخ:</b> <span id="pDate"></span></p>
+<p><b>الموقع:</b> <span id="pLocation"></span></p>
+<p><b>ملاحظات:</b> <span id="pNotes"></span></p>
 </div>
 
 <script>
-function order(product){
-  let text =
-`السلام عليكم
-أرغب بطلب المنتج التالي:
+let locationLink="";
 
-اسم المنتج: ${product}
-الكمية:
-العنوان:
-ملاحظات:
+function getLocation(){
+ navigator.geolocation.getCurrentPosition(pos=>{
+  locationLink=`https://maps.google.com/?q=${pos.coords.latitude},${pos.coords.longitude}`;
+  document.getElementById("status").innerHTML="📍 تم تحديد الموقع";
+ });
+}
 
-الدفع عند الاستلام`;
-  
-  let phone = "9647828301518";
-  let url = "https://wa.me/" + phone + "?text=" + encodeURIComponent(text);
-  window.open(url, "_blank");
+function createPDF(){
+ document.getElementById("pShop").innerText=shop.value;
+ document.getElementById("pPhone").innerText=phone.value;
+ document.getElementById("pDate").innerText=new Date().toLocaleString();
+ document.getElementById("pLocation").innerText=locationLink;
+ document.getElementById("pNotes").innerText=notes.value;
+
+ html2pdf().from(document.getElementById("pdf"))
+ .save("زيارة-"+Date.now()+".pdf");
+
+ document.getElementById("status").innerHTML="✅ تم إنشاء ملف PDF";
 }
 </script>
 
