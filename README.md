@@ -2,110 +2,158 @@
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
-<title>دليل زيوت السيارات</title>
+<title>سما بغداد</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
-body{font-family:tahoma;direction:rtl;background:#f4f4f4;padding:20px}
-h1{color:#003366}
-input,select,button{padding:8px;margin:5px}
-table{width:100%;background:#fff;border-collapse:collapse;margin-top:20px}
-th,td{border:1px solid #aaa;padding:8px;text-align:center}
+body {
+  margin:0;
+  font-family: Arial, sans-serif;
+  background:#f5f5f5;
+  direction: rtl;
+}
+
+header {
+  background:#222;
+  color:#fff;
+  padding:15px;
+  text-align:center;
+}
+
+nav a {
+  color:#fff;
+  margin:0 10px;
+  text-decoration:none;
+  font-weight:bold;
+}
+
+section {
+  padding:30px;
+}
+
+.products {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:20px;
+}
+
+.card {
+  background:#fff;
+  padding:15px;
+  border-radius:10px;
+  box-shadow:0 2px 6px rgba(0,0,0,.1);
+  text-align:center;
+}
+
+.card img {
+  width:100%;
+  border-radius:10px;
+}
+
+.card h3 {
+  margin:10px 0;
+}
+
+.btn {
+  display:inline-block;
+  margin:5px;
+  padding:10px 15px;
+  border-radius:8px;
+  color:#fff;
+  text-decoration:none;
+}
+
+.whatsapp {
+  background:#25D366;
+}
+
+.call {
+  background:#007bff;
+}
+
+/* أزرار ثابتة */
+.floating-buttons {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  z-index:9999;
+}
+
+.floating-buttons a {
+  width:55px;
+  height:55px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:26px;
+  color:#fff;
+  text-decoration:none;
+  box-shadow:0 4px 8px rgba(0,0,0,.3);
+}
+
+footer {
+  background:#222;
+  color:#fff;
+  text-align:center;
+  padding:15px;
+}
 </style>
 </head>
+
 <body>
 
-<h1>دليل زيوت السيارات</h1>
+<header>
+  <h1>🛍️ سما بغداد</h1>
+  <nav>
+    <a href="#home">الرئيسية</a>
+    <a href="#products">المنتجات</a>
+    <a href="#contact">تواصل معنا</a>
+  </nav>
+</header>
 
-<!-- بحث سريع -->
-<input id="search" placeholder="ابحث عن سيارة..." onkeyup="searchCars()">
+<section id="home">
+  <h2>مرحبًا بكم</h2>
+  <p>نقدم لكم أفضل المنتجات بأسعار مناسبة. للطلب تواصل معنا مباشرة.</p>
+</section>
 
-<br><br>
+<section id="products">
+  <h2>المنتجات</h2>
+  <div class="products">
 
-<!-- اختيار السيارة -->
-<select id="car" onchange="setOil()">
-<option value="">اختر السيارة</option>
-<option value="تويوتا كورولا">تويوتا كورولا</option>
-<option value="تويوتا كامري">تويوتا كامري</option>
-<option value="نيسان التيما">نيسان التيما</option>
-<option value="هيونداي إلنترا">هيونداي إلنترا</option>
-<option value="كيا سيراتو">كيا سيراتو</option>
-</select>
+    
 
-<!-- سنة الصنع -->
-<select id="year" onchange="setOil()">
-<option value="">سنة الصنع</option>
-</select>
+    <div class="card">
+      <img src="https://via.placeholder.com/300" alt="منتج">
+      <h3>اسم المنتج</h3>
 
-<!-- نوع الزيت -->
-<input id="oil" readonly placeholder="نوع الزيت">
+    
+      <a class="btn whatsapp" href="https://wa.me/9647700034404">واتساب</a>
+      <a class="btn call" href="tel:07700034404">اتصال</a>
+    </div>
 
-<button onclick="add()">إضافة</button>
+  </div>
+</section>
 
-<table>
-<tr>
-<th>السيارة</th>
-<th>سنة الصنع</th>
-<th>نوع الزيت</th>
-</tr>
-<tbody id="rows"></tbody>
-</table>
+<section id="contact">
+  <h2>تواصل معنا</h2>
+  <p>📞 الهاتف: 07700034404</p>
+  <p>📧 البريد: samabaghdad125@gmail.com</p>
+  <p>📍 العنوان: بغداد – عويريج</p>
+</section>
 
-<script>
-// توليد السنوات
-for(let y=2005;y<=2025;y++){
- year.add(new Option(y,y));
-}
+<footer>
+  <p>© 2026 سما بغداد</p>
+</footer>
 
-// قاعدة البيانات
-const oils = {
- "تويوتا كورولا":{
-  "2018":"5W-30","2019":"5W-30","2020":"5W-30"
- },
- "تويوتا كامري":{
-  "2019":"5W-30","2020":"5W-30"
- },
- "نيسان التيما":{
-  "2018":"5W-30","2019":"5W-30"
- },
- "هيونداي إلنترا":{
-  "2020":"5W-30","2021":"5W-30"
- },
- "كيا سيراتو":{
-  "2019":"5W-30","2020":"5W-30"
- }
-};
-
-function setOil(){
- oil.value = oils[car.value]?.[year.value] || "";
-}
-
-let data=[];
-
-function add(){
- if(!car.value||!year.value) return;
- data.push([car.value,year.value,oil.value||"—"]);
- render();
-}
-
-function render(){
- rows.innerHTML="";
- data.forEach(r=>{
-  rows.innerHTML+=`<tr>
-   <td>${r[0]}</td>
-   <td>${r[1]}</td>
-   <td>${r[2]}</td>
-  </tr>`;
- });
-}
-
-// البحث السريع
-function searchCars(){
- let q = search.value.toLowerCase();
- for(let i=0;i<car.options.length;i++){
-  let opt = car.options[i];
-  opt.style.display = opt.text.toLowerCase().includes(q) ? "" : "none";
- }
-}
-</script>
+<!-- أزرار ثابتة -->
+<div class="floating-buttons">
+  <a class="whatsapp" href="https://wa.me/9647700034404" target="_blank">💬</a>
+  <a class="call" href="tel:07700034404">📞</a>
+</div>
 
 </body>
 </html>
